@@ -1,0 +1,95 @@
+package ai.leetcode.test;
+
+import java.util.*;
+
+/**
+ * 打印二叉树俯瞰所见节点
+ *
+ * 示例：
+ *        1
+ *     /     \
+ *    2       3
+ *   /  \    / \
+ *  4    5  6   7
+ * 俯瞰所见节点为：4 2 1 3 7
+ *
+ *         1
+ *       /   \
+ *     2       3
+ *       \
+ *         4
+ *           \
+ *             5
+ *              \
+ *                6
+ * 俯瞰所见节点为：2 1 3 6
+ */
+public class Main {
+    static class Node {
+        int data;
+        Node left, right;
+
+        public Node(int data) {
+            this.data = data;
+            left = right = null;
+        }
+    }
+
+    public static List<Integer> findTopView(Node root) {
+        class Item {
+            Node node;
+            int distance;
+
+            Item(Node node, int distance) {
+                this.node = node;
+                this.distance = distance;
+            }
+        }
+
+        // TopView中心距离表，使用TreeMap按照Key(距离)自动排序
+        SortedMap<Integer, Node> topViewMap = new TreeMap<>();
+
+        // 需要处理的Node队列
+        Queue<Item> queue = new LinkedList<>();
+        queue.add(new Item(root, 0));
+
+        while (!queue.isEmpty()) {
+            // 出队一个Node
+            Item current = queue.poll();
+
+            // 该Node的距离在Map中不存在
+            if (!topViewMap.containsKey(current.distance)) {
+                topViewMap.put(current.distance, current.node);
+            }
+
+            // 该Node的左Node入队列待处理，距离减1
+            if (current.node.left != null) {
+                queue.add(new Item(current.node.left, current.distance - 1));
+            }
+            // 该Node的右Node入队列待处理，距离加1
+            if (current.node.right != null) {
+                queue.add(new Item(current.node.right, current.distance + 1));
+            }
+        }
+
+        // 按要求输出俯瞰结果
+        List<Integer> topViewList = new ArrayList<>(topViewMap.size());
+        topViewMap.forEach((key, value) -> topViewList.add(value.data));
+        return topViewList;
+    }
+
+    public static void main(String[] args) {
+        Node root = new Node(1);
+        root.left = new Node(2);
+        root.right = new Node(3);
+        root.left.right = new Node(4);
+        root.left.right.right = new Node(5);
+        root.left.right.right.right = new Node(6);
+
+        List<Integer> topView = findTopView(root);
+        for (Integer i : topView) {
+            System.out.print(i);
+            System.out.print(" ");
+        }
+    }
+}
