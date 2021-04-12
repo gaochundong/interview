@@ -30,7 +30,9 @@
 package interview.questions;
 
 public class Solution {
-
+    /**
+     * 方法一：排序
+     */
     public int[] getLeastNumbersBySort(int[] arr, int k) {
         int[] vec = new int[k];
         Arrays.sort(arr);
@@ -40,6 +42,9 @@ public class Solution {
         return vec;
     }
 
+    /**
+     * 方法二：堆
+     */
     public int[] getLeastNumbersByHeap(int[] arr, int k) {
         int[] vec = new int[k];
         if (k == 0) { // 排除 0 的情况
@@ -65,6 +70,9 @@ public class Solution {
         return vec;
     }
 
+    /**
+     * 方法三：快排切分
+     */
     public int[] getLeastNumbersByQuickSort(int[] arr, int k) {
         randomizedSelected(arr, 0, arr.length - 1, k);
         int[] vec = new int[k];
